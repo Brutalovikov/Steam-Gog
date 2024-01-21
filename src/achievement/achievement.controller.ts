@@ -1,8 +1,9 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { AchievementService } from './achievement.service';
 import { Achievement } from './entities/achievement.entity';
-import { CreateAchievementDTO } from './dto/achievement.dto';
-import { ApiTags } from '@nestjs/swagger';
+import { CreateAchievementDTO } from './dto/create-achievement.dto';
+import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { AccessAchievementDTO } from './dto/access-achievement.dto';
 
 @ApiTags("achievements")
 @Controller('achievements')
@@ -21,4 +22,24 @@ export class AchievementController {
     const createdAchievement: Achievement = this.achievementsService.createAchievement(createAchievementDTO);
     return `Добавлено - ${createdAchievement.name}`;
   }
+
+  @Patch(':id')
+  @ApiOkResponse({
+    description: 'The achievement record',
+    type: Achievement,
+  })
+  async accessAcievement(
+    @Param('id') id : number,
+    @Body() accessAchievementDTO: AccessAchievementDTO
+  ): Promise<String> {
+    //const game = this.gameService.getGame(id);
+    //console.log(updateGameDTO);
+    const accessAcievement = await this.achievementsService.accessAchievement(accessAchievementDTO, id);
+    if (!accessAcievement.achieved) {
+      return `Достижение ${accessAcievement.name} в игре ${accessAcievement.game} теперь НЕ ДОСТИГНУТО)`;
+    }
+    else
+      return `Достижение ${accessAcievement.name} в игре ${accessAcievement.game} засчитано.`;
+  }
 }
+

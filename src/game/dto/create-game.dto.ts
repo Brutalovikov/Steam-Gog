@@ -6,4 +6,9 @@ export class CreateGameDTO {
   @IsNotEmpty()
   @ApiProperty()
   name: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty()
+  price: number;
 }

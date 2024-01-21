@@ -6,4 +6,9 @@ export class UpdateGameDTO {
   @IsNotEmpty()
   @ApiProperty()
   name: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty()
+  price: number;
 }

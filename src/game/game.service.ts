@@ -20,12 +20,12 @@ export class GameService {
   }
 
   createGame(data: CreateGameDTO): Game {
-    const game: Game = new Game(data.name);
+    const game: Game = new Game(data.name, data.price);
     this.gameRepository.save(game);
     return game;
   }
 
-  async updateGame(data: UpdateGameDTO, id: number) {
+  async updateGame(data: UpdateGameDTO, id: number): Promise<Game> {
     const game = await this.getGame(id);
     if (!game) {
       throw new NotFoundException(`Игры с Id: ${id} нет.`);
@@ -39,6 +39,7 @@ export class GameService {
     //game.name = rename;
     await this.gameRepository.save(game);*/
     await this.gameRepository.update(id, data);
+    return this.getGame(id);
   }
 
   async deleteGame(gameId: number) {
@@ -58,4 +59,21 @@ export class GameService {
   getGames(): Promise<import("./entities/game.entity").Game[]> {
     throw new Error('Method not implemented.');
   }*/
+
+  async getGamePrices(id: number): Promise<number[]> {
+    const game = await this.getGame(id);
+    if (!game) {
+      throw new NotFoundException(`Игры с Id: ${id} нет.`);
+    }
+
+    return this.conculatePrice(game.price);
+  }
+
+  conculatePrice(gamePrice: number): number[] {
+    const euroPrice = gamePrice * 0.92;
+    const rubPrice = gamePrice * 89.43;
+
+    let prices: Array<number> = [euroPrice, rubPrice];
+    return prices;
+  }
 }
