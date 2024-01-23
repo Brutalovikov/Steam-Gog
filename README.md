@@ -2,7 +2,11 @@
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
 </p>
 
-  <p align="center"> ДЕСКРИПШН
+<h2 align="center"><b> 
+  Description  
+</b></h2>
+<hr>
+<p>
 
 1. Тренировочное клиент-серверное приложение для приобретения навыков работы работы с API.
 2. В приложении будет использован API Steam.
