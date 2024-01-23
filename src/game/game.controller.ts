@@ -1,10 +1,11 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Put, UseInterceptors } from '@nestjs/common';
 import { GameService } from './game.service';
 import { Game } from './entities/game.entity';
 import { CreateGameDTO } from './dto/create-game.dto';
 import { UpdateGameDTO } from './dto/update-game.dto';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { Price } from './interfaces/price.interface';
+import { CheckGameExists } from 'src/share/interceptors/check-game-exists.interceptor';
 
 @ApiTags("games")
 @Controller('game')
@@ -17,6 +18,7 @@ export class GameController {
   }
 
   @Get(':id/price')
+  @UseInterceptors(CheckGameExists)
   async getGamePrices(
     @Param('id') id : number
   ): Promise<Price> {
@@ -26,6 +28,7 @@ export class GameController {
   }
 
   @Get(':id')
+  @UseInterceptors(CheckGameExists)
   async getGame(
     @Param('id') id : number
   ): Promise<Game> {
@@ -43,6 +46,7 @@ export class GameController {
   }
 
   @Delete(':id')
+  @UseInterceptors(CheckGameExists)
   async deleteGame(
     @Param('id') id : number
   ): Promise<string> {
@@ -51,6 +55,7 @@ export class GameController {
   }
 
   @Patch(':id')
+  @UseInterceptors(CheckGameExists)
   @ApiOkResponse({
     description: 'The game record',
     type: Game,
