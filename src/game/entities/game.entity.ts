@@ -6,6 +6,7 @@ import { Courses } from "../game.constants";
 export class Game{
   @PrimaryGeneratedColumn()
   @ApiProperty() 
+  @ApiProperty() 
   id: number;
   
   @Column({ type: 'varchar', length: 30 })

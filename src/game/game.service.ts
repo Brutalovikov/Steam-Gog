@@ -28,6 +28,7 @@ export class GameService {
     return game;
   }
 
+
   async updateGame(data: UpdateGameDTO, id: number): Promise<Game> {
     const game = await this.getGame(id);
     if (!game) {
