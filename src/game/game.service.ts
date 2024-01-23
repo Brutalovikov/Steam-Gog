@@ -31,9 +31,6 @@ export class GameService {
 
   async updateGame(data: UpdateGameDTO, id: number): Promise<Game> {
     const game = await this.getGame(id);
-    if (!game) {
-      throw new NotFoundException(`Игры с Id: ${id} нет.`);
-    }
     /*
     for (const [key, value] of Object.entries(data.name)) {
       game[key] = value;
@@ -48,9 +45,7 @@ export class GameService {
 
   async deleteGame(gameId: number) {
     const game = await this.getGame(gameId);
-    if (!game) {
-      throw new NotFoundException(`Игры с Id: ${gameId} нет.`);
-    }
+
     await this.gameRepository.delete(game.id);
     return game;
   }
@@ -66,9 +61,6 @@ export class GameService {
 
   async getGamePrices(id: number): Promise<Price> {
     const game = await this.getGame(id);
-    if (!game) {
-      throw new NotFoundException(`Игры с Id: ${id} нет.`);
-    }
 
     return {
       euroPrice: game.priceEuro,
