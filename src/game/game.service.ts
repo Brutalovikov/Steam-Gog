@@ -4,9 +4,12 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Game } from './entities/game.entity';
 import { Repository } from 'typeorm';
 import { UpdateGameDTO } from './dto/update-game.dto';
+import { Price } from './interfaces/price.interface';
 
 @Injectable()
 export class GameService {
+  //static readonly euroPrice = 0.92;
+  //static readonly rubPrice = 89.43;
   constructor(
     @InjectRepository(Game) private readonly gameRepository: Repository<Game>,
   ) {}
@@ -20,12 +23,12 @@ export class GameService {
   }
 
   createGame(data: CreateGameDTO): Game {
-    const game: Game = new Game(data.name);
+    const game: Game = new Game(data.name, data.priceDollar);
     this.gameRepository.save(game);
     return game;
   }
 
-  async updateGame(data: UpdateGameDTO, id: number) {
+  async updateGame(data: UpdateGameDTO, id: number): Promise<Game> {
     const game = await this.getGame(id);
     if (!game) {
       throw new NotFoundException(`Игры с Id: ${id} нет.`);
@@ -39,6 +42,7 @@ export class GameService {
     //game.name = rename;
     await this.gameRepository.save(game);*/
     await this.gameRepository.update(id, data);
+    return this.getGame(id);
   }
 
   async deleteGame(gameId: number) {
@@ -57,5 +61,34 @@ export class GameService {
   }
   getGames(): Promise<import("./entities/game.entity").Game[]> {
     throw new Error('Method not implemented.');
+  }*/
+
+  async getGamePrices(id: number): Promise<Price> {
+    const game = await this.getGame(id);
+    if (!game) {
+      throw new NotFoundException(`Игры с Id: ${id} нет.`);
+    }
+
+    return {
+      euroPrice: game.priceEuro,
+      rubPrice: game.priceRub
+    };
+  }
+
+  /*conculatePrice(gamePrice: number): number[] {
+    //let prices: Array<number> = [gamePrice * GameService.euroPrice, gamePrice * GameService.rubPrice];
+    const gp = gamePrice * GameService.euroPrice;
+    const rp = gamePrice * GameService.rubPrice;
+
+    return [gp, rp];
+  }*/
+
+  /*conculatePrice(gamePrice: number): Price {
+    //let prices: Array<number> = [gamePrice * GameService.euroPrice, gamePrice * GameService.rubPrice];
+    const price: Price = new 
+    const gp = gamePrice * GameService.euroPrice;
+    const rp = gamePrice * GameService.rubPrice;
+
+    return [gp, rp];
   }*/
 }
