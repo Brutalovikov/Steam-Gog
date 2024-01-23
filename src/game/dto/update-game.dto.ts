@@ -1,9 +1,14 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { IsNotEmpty, IsString } from "class-validator";
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+import { IsNotEmpty, IsNumber, IsOptional, IsString } from "class-validator";
 
 export class UpdateGameDTO {
   @IsString()
-  @IsNotEmpty()
-  @ApiProperty()
-  name: string;
+  @IsOptional()
+  @ApiPropertyOptional()
+  name?: string;
+
+  @IsNumber()
+  @IsOptional()
+  @ApiPropertyOptional()
+  priceDollar?: number;
 }
