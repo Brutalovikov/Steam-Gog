@@ -1,6 +1,8 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 import { Courses } from "../game.constants";
+import { Price } from "../interfaces/price.interface";
+import { GameService } from "../game.service";
 
 @Entity()
 export class Game{
@@ -25,10 +27,10 @@ export class Game{
   @ApiProperty() 
   priceEuro: number;
 
-  constructor(name: string, priceDollar: number) {
+  constructor(name: string, priceDollar: number, priceRub: number, priceEuro: number) {
     this.name = name;
     this.priceDollar = priceDollar;
-    this.priceRub = priceDollar * Courses.rubCours;
-    this.priceEuro = priceDollar * Courses.euroCours;
+    this.priceEuro = priceEuro;
+    this.priceRub = priceRub;
   } 
 }

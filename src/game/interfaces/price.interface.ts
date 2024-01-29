@@ -1,4 +1,4 @@
 export interface Price{
-  euroPrice: number,
-  rubPrice: number, 
+  priceRub: number,
+  priceEuro: number; 
 }

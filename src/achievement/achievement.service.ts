@@ -13,11 +13,11 @@ export class AchievementService {
     @InjectRepository(Achievement) private readonly achievementRepository: Repository<Achievement>,
   ) {}
   
-  getAchievements(): Promise<Achievement[]> {
+  async getAchievements(): Promise<Achievement[]> {
     return this.achievementRepository.find();
   }
 
-  getAchievement(id: number): Promise<Achievement> {
+  async getAchievement(id: number): Promise<Achievement> {
     return this.achievementRepository.findOneBy({id})
   }
 
@@ -29,11 +29,8 @@ export class AchievementService {
   }
 
   async toggleAchievementStatus(data: AccessAchievementDTO, id: number): Promise<Achievement> {
-    const game = await this.getAchievement(id);
-    if (!game) {
-      throw new NotFoundException(`Достижения с Id: ${id} нет.`);
-    }
     await this.achievementRepository.update(id, data);
+    
     return this.getAchievement(id);
   }
 }
