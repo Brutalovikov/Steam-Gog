@@ -1,36 +1,42 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CreateGameDTO } from './dto/create-game.dto';
-import { InjectRepository } from '@nestjs/typeorm';
 import { Game } from './entities/game.entity';
-import { Repository } from 'typeorm';
 import { UpdateGameDTO } from './dto/update-game.dto';
 import { Price } from './interfaces/price.interface';
-import { Courses } from './game.constants';
 import { CurrencyService } from '../shared/providers/currency.service';
+import { InjectModel } from '@nestjs/sequelize';
 
 @Injectable()
 export class GameService {
   //static readonly euroPrice = 0.92;
   //static readonly rubPrice = 89.43;
   constructor(
-    @InjectRepository(Game) private readonly gameRepository: Repository<Game>, 
+    @InjectModel(Game) private readonly gameModel: typeof Game, 
     private readonly currencyService: CurrencyService
   ) {}
   
   async getGames(): Promise<Game[]> {
     //console.log(await this.currencyService.getCourses());
-    return this.gameRepository.find();
+    return this.gameModel.findAll();
   }
 
   async getGame(id: number): Promise<Game> {
-    return this.gameRepository.findOneBy({id})
+    return this.gameModel.findOne({
+      where: {
+        id,
+      }
+    })
   }
 
   async createGame(data: CreateGameDTO): Promise<Game> {
     const prices = await this.calculatePrice(data.priceDollar);
-    const game: Game = new Game(data.name, data.priceDollar, prices.priceRub, prices.priceEuro);
+    const game = await this.gameModel.create({
+      name: data.name,
+      priceDollar: data.priceDollar,
+      priceRub: prices.priceRub,
+      priceEuro: prices.priceEuro,
+    });
 
-    this.gameRepository.save(game);
     return game;
   }
 
@@ -49,9 +55,17 @@ export class GameService {
     const shit = await this.getGamePrices(game.id);
     console.log(shit);*/
     if (data.priceDollar) 
-      await this.gameRepository.update(id, {...data, ...this.calculatePrice(data.priceDollar)});
+      await this.gameModel.update({...data, ...this.calculatePrice(data.priceDollar)}, {
+        where: {
+          id,
+        },
+      });
     else 
-      await this.gameRepository.update(id, data);
+      await this.gameModel.update(data, {
+        where: {
+          id,
+        },
+      });
 
     return this.getGame(id);
   }
@@ -59,7 +73,11 @@ export class GameService {
   async deleteGame(gameId: number) {
     const game = await this.getGame(gameId);
 
-    await this.gameRepository.delete(game.id);
+    await this.gameModel.destroy({
+      where: {
+        id: game.id,
+      }
+    });
     return game;
   }
  /* async deleteGame(id: number): Promise<void> {

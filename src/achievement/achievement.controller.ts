@@ -18,11 +18,11 @@ export class AchievementController {
   }
 
   @Post()
-  @UseInterceptors(AnsweringAcievement)
-  createAchievement(
+  //@UseInterceptors(AnsweringAcievement)
+  async createAchievement(
     @Body() createAchievementDTO: CreateAchievementDTO
-  ): string {
-    const createdAchievement: Achievement = this.achievementsService.createAchievement(createAchievementDTO);
+  ): Promise<string> {
+    const createdAchievement: Achievement = await this.achievementsService.createAchievement(createAchievementDTO);
 
     //return `Добавлено - ${createdAchievement.name}`;
     return AnsweringAcievement.toString();

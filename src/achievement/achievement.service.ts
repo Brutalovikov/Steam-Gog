@@ -1,35 +1,48 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 //import { marsAchievements } from './achievements.constants';
 import { Achievement } from './entities/achievement.entity';
-import { Repository } from 'typeorm';
-import { InjectRepository } from '@nestjs/typeorm';
 import { CreateAchievementDTO } from './dto/create-achievement.dto';
 import { Console } from 'console';
 import { AccessAchievementDTO } from './dto/access-achievement.dto';
+import { Repository } from 'sequelize-typescript';
+import { InjectModel } from '@nestjs/sequelize';
 
 @Injectable()
 export class AchievementService {
   constructor(
-    @InjectRepository(Achievement) private readonly achievementRepository: Repository<Achievement>,
+    @InjectModel(Achievement) private achievementModel: typeof Achievement,
   ) {}
   
   async getAchievements(): Promise<Achievement[]> {
-    return this.achievementRepository.find();
+    return this.achievementModel.findAll();
   }
 
   async getAchievement(id: number): Promise<Achievement> {
-    return this.achievementRepository.findOneBy({id})
+    return this.achievementModel.findOne({
+      where: {
+        id,
+      }
+    })
   }
 
-  createAchievement(data: CreateAchievementDTO): Achievement {
-    const achievement: Achievement = new Achievement(data.game, data.name, data.description, data.achieved);
-    //console.log(achievement);
-    this.achievementRepository.save(achievement);
+  async createAchievement(data: CreateAchievementDTO): Promise<Achievement> {
+    //const achievement: Achievement = new Achievement(data.game, data.name, data.description, data.achieved);
+    const achievement = await this.achievementModel.create({
+      game: data.game,
+      name: data.name,
+      description: data.description,
+      achieved: data.achieved,
+    });
+    //console.log(achievement); 
     return achievement;
   }
 
   async toggleAchievementStatus(data: AccessAchievementDTO, id: number): Promise<Achievement> {
-    await this.achievementRepository.update(id, data);
+    await this.achievementModel.update(data, {
+      where: {
+        id,
+      },
+    });
     
     return this.getAchievement(id);
   }

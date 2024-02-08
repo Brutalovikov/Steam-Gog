@@ -1,26 +1,24 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Model, Table } from "sequelize-typescript";
 
-@Entity()
-export class Achievement{
-  @PrimaryGeneratedColumn()
-  id: number;
-  
-  @Column({ type: 'varchar', length: 30 }) 
+@Table
+export class Achievement extends Model{
+  @Column 
   game: string;
 
-  @Column({ type: 'varchar', length: 30 }) 
+  @Column
   name: string;
 
-  @Column({ type: 'varchar', length: 30 }) 
+  @Column 
   description: string;
 
-  @Column({ type: 'boolean'}) 
+  @Column
   achieved: boolean;
 
-  constructor(game: string, name: string, description: string, achieved: boolean) {
+  /*constructor(game: string, name: string, description: string, achieved: boolean) {
+    super();
     this.game = game;
     this.name = name;
     this.description = description;
     this.achieved = achieved;
-  } 
+  }*/
 }
