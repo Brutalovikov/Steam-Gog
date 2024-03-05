@@ -6,12 +6,13 @@ import { GameService } from '../../game/game.service';
 export class CheckGameExists implements NestInterceptor {
   constructor(private readonly gameService: GameService) {}
 
-  intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
+  async intercept(context: ExecutionContext, next: CallHandler): Promise<Observable<any>> {
     const http = context.switchToHttp();
     const request = http.getRequest();
     const searchedGameId = request.params.id;
 
-    const game = this.gameService.getGame(searchedGameId);
+    const game = await this.gameService.getGame(searchedGameId);
+    console.log(game);
     if (!game) {
       throw new NotFoundException(`Игры с Id: ${searchedGameId} нет.`);
     }

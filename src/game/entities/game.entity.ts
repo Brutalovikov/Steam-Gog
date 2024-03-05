@@ -1,34 +1,29 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
-import { Courses } from "../game.constants";
+import { Column, Model, Table } from "sequelize-typescript";
 
-@Entity()
-export class Game{
-  @PrimaryGeneratedColumn()
-  @ApiProperty() 
-  @ApiProperty() 
-  id: number;
-  
-  @Column({ type: 'varchar', length: 30 })
+@Table
+export class Game extends Model<Game>{
+  @Column
   @ApiProperty() 
   name: string;
 
-  @Column({ type: 'int'})
+  @Column
   @ApiProperty() 
   priceDollar: number;
 
-  @Column({ type: 'int'})
+  @Column
   @ApiProperty() 
   priceRub: number;
 
-  @Column({ type: 'int'})
+  @Column
   @ApiProperty() 
   priceEuro: number;
 
-  constructor(name: string, priceDollar: number) {
+  /*constructor(name: string, priceDollar: number, priceRub: number, priceEuro: number) {
+    super();
     this.name = name;
     this.priceDollar = priceDollar;
-    this.priceRub = priceDollar * Courses.rubCours;
-    this.priceEuro = priceDollar * Courses.euroCours;
-  } 
+    this.priceEuro = priceEuro;
+    this.priceRub = priceRub;
+  } */
 }

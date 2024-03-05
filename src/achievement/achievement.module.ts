@@ -1,13 +1,13 @@
 import { Module } from "@nestjs/common";
-import { TypeOrmModule } from "@nestjs/typeorm";
 import { Achievement } from "./entities/achievement.entity";
 import { AchievementController } from "./achievement.controller";
 import { AchievementService } from "./achievement.service";
+import { SequelizeModule } from "@nestjs/sequelize";
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Achievement])],
+  imports: [SequelizeModule.forFeature([Achievement])],
   controllers: [AchievementController],
   providers: [AchievementService],
-  //exports: [AchievementService]
+  exports: [SequelizeModule]
 })
 export class AchievementModule {}
