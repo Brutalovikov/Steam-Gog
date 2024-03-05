@@ -12,7 +12,10 @@ import { GameResponseDTO } from './dto/game-response.dto';
 @ApiTags("games")
 @Controller('game')
 export class GameController {
-  constructor(private readonly gameService: GameService) {}
+  constructor(
+    private readonly gameService: GameService,
+    //private readonly steamService: SteamService,
+  ) {}
 
   @Get()
   @UseInterceptors(LogGameRequest)

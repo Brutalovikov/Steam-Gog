@@ -2,6 +2,9 @@ import { Column, Model, Table } from "sequelize-typescript";
 
 @Table
 export class Achievement extends Model{
+ // @Column
+ // gameID: number;
+
   @Column 
   game: string;
 

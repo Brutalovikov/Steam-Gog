@@ -10,6 +10,9 @@ import { GameService } from './game/game.service';
 import { Game } from './game/entities/game.entity';
 import { GameModule } from './game/game.module';
 import { SequelizeModule } from '@nestjs/sequelize';
+import { SteamController } from './steam/steam.controller';
+import { SteamService } from './steam/steam.service';
+import { SteamModule } from './steam/steam.module';
 
 @Module({
   imports: [
@@ -22,11 +25,12 @@ import { SequelizeModule } from '@nestjs/sequelize';
       models: [Achievement, Game],
       database: 'rudevDB2',
       autoLoadModels: true,
-      //synchronize: true,
-      //logging: false,
+      synchronize: true,
+      logging: false,
     }),
     AchievementModule,
-    GameModule
+    GameModule,
+    SteamModule
   ],
   controllers: [AppController],
   providers: [AppService],
