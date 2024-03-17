@@ -1,4 +1,4 @@
-import { Controller, Param, Get } from '@nestjs/common';
+import { Controller, Param, Get, NotFoundException } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { SteamService } from './steam.service';
 import { FriendsSelection } from './models/friends-selection.model';
@@ -12,6 +12,13 @@ export class SteamController {
   constructor(
     private readonly steamService: SteamService,
   ) {}
+
+  @Get('info/:id')
+  async getGameInfoForGamePage(
+    @Param('id') id : number
+  ): Promise<any> {
+    return this.steamService.getGameInfoForGamePage(id);
+  }
 
   @Get('game/:id')
   async getGameFromSteam(
@@ -34,12 +41,23 @@ export class SteamController {
     return this.steamService.getFriends(userId);
   }
 
+  @Get('achievements/:id')
+  async getAllAchievementsForGame(
+    @Param('id') id : number
+  ): Promise<any> {
+    return this.steamService.getAllAchievementsForGame(id);
+  }
+
   @Get('game/:gameId/stats/:userId')
   async getUserStatsForGame(
     @Param('userId') userId : string,
     @Param('gameId') gameId : string
   ): Promise<GameStats> {
-    return this.steamService.getUserStatsForGame(userId, gameId);
+    const stats = await this.steamService.getUserStatsForGame(userId, gameId);
+
+    if (!stats) throw new NotFoundException("Stats not found.");
+    
+    return stats;
   }
 
   @Get('game/:gameId/achievements/:userId')
@@ -47,6 +65,7 @@ export class SteamController {
     @Param('userId') userId : string,
     @Param('gameId') gameId : string
   ): Promise<Achievement[]> {
+    //console.log(await this.steamService.getUserAchievementsForGame(userId, gameId));
     return this.steamService.getUserAchievementsForGame(userId, gameId);
   }
 

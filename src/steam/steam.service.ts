@@ -4,6 +4,7 @@ import { FriendsSelection } from './models/friends-selection.model';
 import { Achievement } from 'src/shared/interfaces/achievement.interface';
 import { OwnedGames } from 'src/shared/interfaces/owned-games.interface';
 import { Game } from 'src/shared/interfaces/game.interface';
+//import { Achievement } from 'src/achievement/entities/achievement.entity';
 
 @Injectable()
 export class SteamService {
@@ -30,15 +31,42 @@ export class SteamService {
     return users.map(player => player.personaname);
   }
 
+  async getAllAchievementsForGame(gameId: number) {
+    return this.steamApiService.getAllAchievementsForGame(gameId);
+  }
+
   async getUserStatsForGame(userId: string, gameId: string) {
+    //console.log(await this.steamApiService.getUserStatsForGame(userId, gameId));
     return this.steamApiService.getUserStatsForGame(userId, gameId);
   }
 
   async getUserAchievementsForGame(userId: string, gameId: string): Promise<Achievement[]> {
     const stats = await this.getUserStatsForGame(userId, gameId);
-    //console.log(stats);
 
-    return stats.achievements;
+    if (!stats) return [];
+
+    let achievementsArr: Achievement[] = [];
+    //if(stats.achievements[0].name != 'Ачивменты отсутствуют') {
+    const all = await this.getAllAchievementsForGame(parseInt(gameId));
+
+    all.forEach(achievement => {
+      let statsAchievement = stats.achievements.find(statAchievement => statAchievement.name == achievement.name);
+      achievementsArr.push({
+          icon: achievement.icon, 
+          name: achievement.name, 
+          achieved: !!statsAchievement,
+      }); 
+    });
+
+    return achievementsArr;
+    //}
+    //else
+      //return stats.achievements;
+  }
+
+  async getGameInfoForGamePage(id: number) {
+    //console.log(await this.steamApiService.getGameInfoForGamePage(id));
+    return this.steamApiService.getGameInfoForGamePage(id);
   }
 
   async getGameFromSteam(id: number) {
