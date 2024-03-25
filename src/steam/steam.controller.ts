@@ -1,10 +1,12 @@
-import { Controller, Param, Get, NotFoundException } from '@nestjs/common';
+import { Controller, Param, Get, NotFoundException, UseInterceptors } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { SteamService } from './steam.service';
 import { FriendsSelection } from './models/friends-selection.model';
 import { Achievement } from 'src/shared/interfaces/achievement.interface';
 import { GameStats } from 'src/shared/interfaces/game-stats.interface';
 import { OwnedGames } from 'src/shared/interfaces/owned-games.interface';
+import { CheckGameFromSteam } from 'src/shared/interceptors/check-steam-game-exists.interceptor';
+import { CheckUser } from 'src/shared/interceptors/check-user-exists.interceptor';
 
 @ApiTags("steam")
 @Controller('steam')
@@ -13,21 +15,32 @@ export class SteamController {
     private readonly steamService: SteamService,
   ) {}
 
-  @Get('info/:id')
+  @Get('info/:gameId')
+  @UseInterceptors(CheckGameFromSteam)
   async getGameInfoForGamePage(
-    @Param('id') id : number
+    @Param('gameId') id : number
   ): Promise<any> {
     return this.steamService.getGameInfoForGamePage(id);
   }
 
-  @Get('game/:id')
+  @Get('user/:userId')
+  @UseInterceptors(CheckUser)
+  async getUser(
+    @Param('userId') id : string
+  ): Promise<any> {
+    return this.steamService.getUser(id);
+  }
+
+  @Get('game/:gameId')
+  @UseInterceptors(CheckGameFromSteam)
   async getGameFromSteam(
-    @Param('id') id : number
+    @Param('gameId') id : number
   ): Promise<any> {
     return this.steamService.getGameFromSteam(id);
   }
 
   @Get('games/:userId')
+  @UseInterceptors(CheckUser)
   async getOwnedGames(
     @Param('userId') userId : string
   ): Promise<OwnedGames> {
@@ -35,20 +48,23 @@ export class SteamController {
   }
 
   @Get('friends/:userId')
+  @UseInterceptors(CheckUser)
   async getFriends(
     @Param('userId') userId : string
   ): Promise<string[]> {
     return this.steamService.getFriends(userId);
   }
 
-  @Get('achievements/:id')
+  @Get('achievements/:gameId')
+  @UseInterceptors(CheckGameFromSteam)
   async getAllAchievementsForGame(
-    @Param('id') id : number
+    @Param('gameId') id : number
   ): Promise<any> {
     return this.steamService.getAllAchievementsForGame(id);
   }
 
   @Get('game/:gameId/stats/:userId')
+  @UseInterceptors(CheckGameFromSteam, CheckUser)
   async getUserStatsForGame(
     @Param('userId') userId : string,
     @Param('gameId') gameId : string
@@ -61,6 +77,7 @@ export class SteamController {
   }
 
   @Get('game/:gameId/achievements/:userId')
+  @UseInterceptors(CheckGameFromSteam, CheckUser)
   async getUserAchievementsForGame(
     @Param('userId') userId : string,
     @Param('gameId') gameId : string
@@ -70,6 +87,7 @@ export class SteamController {
   }
 
   @Get('friendship/:userId')
+  @UseInterceptors(CheckUser)
   async getOldestAndNewestFriends(
     @Param('userId') userId : string
   ): Promise<FriendsSelection> {

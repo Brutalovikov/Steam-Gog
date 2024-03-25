@@ -1,13 +1,15 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { SteamApiService } from 'src/shared/providers/steam-api.service';
 import { FriendsSelection } from './models/friends-selection.model';
 import { Achievement } from 'src/shared/interfaces/achievement.interface';
 import { OwnedGames } from 'src/shared/interfaces/owned-games.interface';
 import { Game } from 'src/shared/interfaces/game.interface';
+import { MyLogger } from 'src/shared/providers/logger.service';
 //import { Achievement } from 'src/achievement/entities/achievement.entity';
 
 @Injectable()
 export class SteamService {
+  private readonly logger: MyLogger = new MyLogger(SteamService.name);
   constructor(
     private readonly steamApiService: SteamApiService,
   ) {}
@@ -21,6 +23,10 @@ export class SteamService {
       oldest_friend: selectedFriends.find(friend =>  friend.steamid == sortedByDateFriends[0].steamid).personaname,
       newest_friend: selectedFriends.find(friend =>  friend.steamid == sortedByDateFriends[sortedByDateFriends.length - 1].steamid).personaname
     };
+  }
+
+  async getUser(userId: string) {
+    return this.steamApiService.getUser(userId);
   }
 
   async getFriends(userId: string) {
@@ -41,6 +47,7 @@ export class SteamService {
   }
 
   async getUserAchievementsForGame(userId: string, gameId: string): Promise<Achievement[]> {
+    this.logger.log(`Пользователь ${userId} запросил данные об игре ${gameId}`);
     const stats = await this.getUserStatsForGame(userId, gameId);
 
     if (!stats) return [];
@@ -53,7 +60,8 @@ export class SteamService {
       let statsAchievement = stats.achievements.find(statAchievement => statAchievement.name == achievement.name);
       achievementsArr.push({
           icon: achievement.icon, 
-          name: achievement.name, 
+          name: achievement.displayName,
+          description: achievement.description,
           achieved: !!statsAchievement,
       }); 
     });

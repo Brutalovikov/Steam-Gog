@@ -1,12 +1,10 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
-import { NEVER, lastValueFrom, map, tap } from 'rxjs';
-import { Courses } from '../interfaces/courses.interface';
+import { catchError, lastValueFrom, map, of } from 'rxjs';
 import { SteamUser } from '../interfaces/steam-user.interface';
 import { SteamFriend } from '../interfaces/steam-friend.interface';
 import { GameStats } from '../interfaces/game-stats.interface';
 import { OwnedGames } from '../interfaces/owned-games.interface';
-import { Achievement } from '../interfaces/achievement.interface';
 
 
 @Injectable()
@@ -27,13 +25,10 @@ export class SteamApiService {
 
   //https://api.steampowered.com/ISteamUserStats/GetSchemaForGame/v2/?key=9EA0004FFC993ED4C65632B399B53BDB&appid=570
   async getGame(gameId: number): Promise<any> {
-    // console.log(await lastValueFrom(
-    //   this.httpService.get(`${this.steamURL}/ISteamUserStats/GetSchemaForGame/v2/?key=${this.apiKey}&appid=${gameId}&include_appinfo=true`).pipe(
-    //   map(response => response.data),
-    // )));
     return lastValueFrom(
       this.httpService.get(`${this.steamApiURL}/ISteamUserStats/GetSchemaForGame/v2/?key=${this.apiKey}&appid=${gameId}`).pipe(
       map(response => response.data),
+      catchError(error => of(null))
     ))
   }
 
@@ -42,6 +37,14 @@ export class SteamApiService {
     return lastValueFrom(
       this.httpService.get(`${this.steamApiURL}/IPlayerService/GetOwnedGames/v0001/?key=${this.apiKey}&steamid=${userId}&include_appinfo=true`).pipe(
       map(res => res.data.response),
+    ))
+  }
+
+  //https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/?key=9EA0004FFC993ED4C65632B399B53BDB&steamids=76561198280250790
+  async getUser(userId: string): Promise<any> {
+    return lastValueFrom(
+      this.httpService.get(`${this.steamApiURL}/ISteamUser/GetPlayerSummaries/v2/?key=${this.apiKey}&steamids=${userId}`).pipe(
+      map(response => response.data.response.players[0] ?? null),
     ))
   }
 
