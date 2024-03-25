@@ -13,6 +13,7 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { SteamController } from './steam/steam.controller';
 import { SteamService } from './steam/steam.service';
 import { SteamModule } from './steam/steam.module';
+import { PassportModule } from '@nestjs/passport';
 
 @Module({
   imports: [
@@ -30,7 +31,8 @@ import { SteamModule } from './steam/steam.module';
     }),
     AchievementModule,
     GameModule,
-    SteamModule
+    SteamModule,
+    PassportModule 
   ],
   controllers: [AppController],
   providers: [AppService],
