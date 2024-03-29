@@ -14,6 +14,7 @@ import { SteamController } from './steam/steam.controller';
 import { SteamService } from './steam/steam.service';
 import { SteamModule } from './steam/steam.module';
 import { PassportModule } from '@nestjs/passport';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -32,7 +33,8 @@ import { PassportModule } from '@nestjs/passport';
     AchievementModule,
     GameModule,
     SteamModule,
-    PassportModule 
+    PassportModule,
+    AuthModule 
   ],
   controllers: [AppController],
   providers: [AppService],
