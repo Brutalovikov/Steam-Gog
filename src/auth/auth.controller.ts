@@ -4,13 +4,13 @@ import { AuthService } from './auth.service';
 @Controller('auth')
 export class AuthController {
   constructor(private readonly steamAuthService: AuthService) { }
+  
   @Get('steam')
-  async redirectToSteamLogin(@Res() res: any): Promise<string> {
+  async redirectToSteamLogin(): Promise<any> {
     console.log('auth')
-    //const redirectUrl = await this.steamAuthService.getRedirectUrl();
+    const redirectUrl = await this.steamAuthService.getRedirectUrl();
     //res.setHeader('Access-Control-Allow-Origin', "*");
-    //console.log(redirectUrl)
-    return '127.0.0.1:8000';
+    return {url: redirectUrl};
   }
 
   @Get('steam/callback')
