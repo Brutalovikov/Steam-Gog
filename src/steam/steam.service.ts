@@ -54,6 +54,7 @@ export class SteamService {
 
     let achievementsArr: Achievement[] = [];
     //if(stats.achievements[0].name != 'Ачивменты отсутствуют') {
+      //console.log("1111", gameId)
     const all = await this.getAllAchievementsForGame(parseInt(gameId));
 
     all.forEach(achievement => {

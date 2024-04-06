@@ -13,6 +13,9 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { SteamController } from './steam/steam.controller';
 import { SteamService } from './steam/steam.service';
 import { SteamModule } from './steam/steam.module';
+import { PassportModule } from '@nestjs/passport';
+import { AuthModule } from './auth/auth.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 @Module({
   imports: [
@@ -28,9 +31,12 @@ import { SteamModule } from './steam/steam.module';
       synchronize: true,
       logging: false,
     }),
+    EventEmitterModule.forRoot(),
     AchievementModule,
     GameModule,
-    SteamModule
+    SteamModule,
+    PassportModule,
+    AuthModule 
   ],
   controllers: [AppController],
   providers: [AppService],

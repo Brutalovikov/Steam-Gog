@@ -15,6 +15,7 @@ export class SteamApiService {
   steamStoreURL = 'https://store.steampowered.com/api/appdetails';
   //Мой стим айде - 76561198280250790
 
+
   //https://store.steampowered.com/api/appdetails?appids=550
   getGameInfoForGamePage(gameId: number): Promise<any> {
     return lastValueFrom(
