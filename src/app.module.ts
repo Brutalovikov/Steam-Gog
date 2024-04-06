@@ -15,6 +15,7 @@ import { SteamService } from './steam/steam.service';
 import { SteamModule } from './steam/steam.module';
 import { PassportModule } from '@nestjs/passport';
 import { AuthModule } from './auth/auth.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { AuthModule } from './auth/auth.module';
       synchronize: true,
       logging: false,
     }),
+    EventEmitterModule.forRoot(),
     AchievementModule,
     GameModule,
     SteamModule,

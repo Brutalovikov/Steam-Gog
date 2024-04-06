@@ -1,15 +1,21 @@
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-steam'; 
 import { Injectable, UnauthorizedException } from '@nestjs/common';
+import axios from 'axios';
 
 @Injectable()
-export class AuthService extends PassportStrategy(Strategy) {
+export class SteamAuthService extends PassportStrategy(Strategy) {
   constructor() {
     super({
       returnURL: 'http://localhost:3000/auth/steam/return',
       realm: 'http://localhost:3000/',
       apiKey: '9EA0004FFC993ED4C65632B399B53BDB',
     });
+  }
+
+  async getUserInfo(steamId: string) {
+    const response = await axios.get(`https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=9EA0004FFC993ED4C65632B399B53BDB&steamids=${steamId}`);
+    return response.data;
   }
 
   async validate(identifier: string): Promise<any> {

@@ -1,11 +1,19 @@
 import {Injectable} from '@nestjs/common';
+import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
+import EventEmitter from 'events';
 import SteamAuth from 'node-steam-openid'
+import { Observable, fromEvent, map, tap } from 'rxjs';
+import { SteamAuthService } from 'src/shared/providers/auth.service';
 
 @Injectable()
 export class AuthService {
 	private readonly steam: SteamAuth;
+	private readonly steamAPI: SteamAuthService;
+	private eventEmitter: EventEmitter = new EventEmitter();
 
-	constructor() {
+	constructor(
+		// private eventEmitter: EventEmitter2,
+	) {
 		this.steam = new SteamAuth({
 			realm: 'http://localhost:3000',
 			returnUrl: 'http://localhost:3000/auth/steam/callback',
@@ -18,8 +26,8 @@ export class AuthService {
 	}
 
 	async authenticate(req: any): Promise<any> {
-    console.log(3)
 		try {
+			// this.eventEmitter.emit('auth', {data: "hello"});
 			return await this.steam.authenticate(req)
 
 			//...do something with the data

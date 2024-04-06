@@ -4,8 +4,9 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { SteamService } from './steam.service';
 import { SteamController } from './steam.controller';
 import { SteamApiService } from 'src/shared/providers/steam-api.service';
-import { AuthService } from 'src/shared/providers/auth.service';
+import { SteamAuthService } from 'src/shared/providers/auth.service';
 import { PassportModule } from '@nestjs/passport';
+import { AuthService } from 'src/auth/auth.service';
 
 @Module({
   imports: [
@@ -15,7 +16,7 @@ import { PassportModule } from '@nestjs/passport';
     }),
   ],
   controllers: [SteamController],
-  providers: [SteamService, SteamApiService, AuthService],
+  providers: [SteamService, SteamApiService, SteamAuthService, AuthService],
   exports: [],
 })
 export class SteamModule {}

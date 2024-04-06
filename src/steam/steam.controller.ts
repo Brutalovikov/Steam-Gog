@@ -7,12 +7,14 @@ import { GameStats } from 'src/shared/interfaces/game-stats.interface';
 import { OwnedGames } from 'src/shared/interfaces/owned-games.interface';
 import { CheckGameFromSteam } from 'src/shared/interceptors/check-steam-game-exists.interceptor';
 import { CheckUser } from 'src/shared/interceptors/check-user-exists.interceptor';
+import { AuthService } from 'src/auth/auth.service';
 
 @ApiTags("steam")
 @Controller('steam')
 export class SteamController {
   constructor(
     private readonly steamService: SteamService,
+    //private readonly authService: AuthService,
   ) {}
 
   @Get('info/:gameId')

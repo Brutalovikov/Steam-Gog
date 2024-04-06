@@ -1,22 +1,74 @@
-import { Controller, Get, Redirect, Req, Res } from '@nestjs/common';
+import { Controller, Get, Req, Res, Sse } from '@nestjs/common';
 import { AuthService } from './auth.service';
+import { BehaviorSubject, Observable, distinctUntilChanged, fromEvent, interval, map, of, tap } from 'rxjs';
+import { MyLogger } from 'src/shared/providers/logger.service';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly steamAuthService: AuthService) { }
+  public userAuth: boolean = false;
+  public userData: any = null;
+  private readonly logger: MyLogger = new MyLogger(AuthController.name);
+  private authBS = new BehaviorSubject(null);
+
+  constructor(
+    private readonly authService: AuthService,
+  ) {}
   
   @Get('steam')
   async redirectToSteamLogin(): Promise<any> {
-    console.log('auth')
-    const redirectUrl = await this.steamAuthService.getRedirectUrl();
+    const redirectUrl = await this.authService.getRedirectUrl();
     //res.setHeader('Access-Control-Allow-Origin', "*");
     return {url: redirectUrl};
   }
 
   @Get('steam/callback')
-  async handleSteamLoginCallback(@Req() req: any): Promise<string> {
-    const userData = await this.steamAuthService.authenticate(req);
-    console.log(userData);
-    return `User login`;
+  async handleSteamLoginCallback(@Req() req: any, @Res() res: any): Promise<any> {
+    this.userData = await this.authService.authenticate(req);
+    this.userAuth = true;
+    this.authBS.next(this.userData.steamid);
+    return res.redirect('http://localhost:4200');
+  }
+
+  @Get('steam/logout')
+  async logout() {
+    console.log("lagg");
+    this.userData = null;
+    this.userAuth = false;
+    this.authBS.next(null);
+  }
+
+  @Sse('sse')
+  sse(): Observable<MessageEvent> {  
+    if(this.userAuth) {
+      return this.authBS.pipe(
+        tap(() => this.logger.log("Log IN")),
+        map((_) => ({ data: { 
+          userId: this.userData.steamid, 
+          userName: this.userData.username,
+          avatar: this.userData.avatar.medium
+        } }) as MessageEvent),
+        tap(() => console.log(this.userData)),
+      )
+    }
+    else {
+      return this.authBS.pipe(
+        tap(() => this.logger.log("Log OUT")),
+        map((_) => ({ data: { userId: this.userData, userName: this.userData, avatar: this.userData } }) as MessageEvent),
+      )
+    }
+    
+    // if(this.userAuth) {
+    //   console.log("Пошла жара");
+    //   return interval(1000).pipe(
+    //     // distinctUntilChanged(),
+    //     map((_) => ({ data: { user: this.userData.steamid, check: this.userAuth } }) as MessageEvent),
+    //   );
+    // }
+    // else {
+    //   return interval(100000).pipe(
+    //     map((_) => ({ data: { hello: 'world' } }) as MessageEvent),
+    //   );
+    // }  
   }
 }
