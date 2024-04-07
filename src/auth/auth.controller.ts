@@ -1,7 +1,8 @@
 import { Controller, Get, Req, Res, Sse } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { BehaviorSubject, Observable, map, tap } from 'rxjs';
+import { BehaviorSubject, Observable, distinctUntilChanged, fromEvent, interval, map, of, tap } from 'rxjs';
 import { MyLogger } from 'src/shared/providers/logger.service';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 
 @Controller('auth')
 export class AuthController {
@@ -23,6 +24,13 @@ export class AuthController {
   }
 
   //Получение данных юзера со стима
+  @Get('steam')
+  async redirectToSteamLogin(): Promise<any> {
+    const redirectUrl = await this.authService.getRedirectUrl();
+    //res.setHeader('Access-Control-Allow-Origin', "*");
+    return {url: redirectUrl};
+  }
+
   @Get('steam/callback')
   async handleSteamLoginCallback(@Req() req: any, @Res() res: any): Promise<any> {
     this.userData = await this.authService.authenticate(req);
@@ -58,6 +66,6 @@ export class AuthController {
         tap(() => this.logger.log("Log OUT")),
         map((_) => ({ data: { userId: this.userData, userName: this.userData, avatar: this.userData } }) as MessageEvent),
       )
-    } 
+    }
   }
 }

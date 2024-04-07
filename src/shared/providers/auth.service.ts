@@ -1,6 +1,6 @@
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-steam'; 
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import axios from 'axios';
 
 @Injectable()
@@ -19,7 +19,5 @@ export class SteamAuthService extends PassportStrategy(Strategy) {
     return response.data;
   }
 
-  async validate(identifier: string): Promise<any> {
-
-  }
+  async validate(identifier: string): Promise<any> {}
 }

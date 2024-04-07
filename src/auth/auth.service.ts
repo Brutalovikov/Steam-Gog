@@ -1,6 +1,6 @@
 import {Injectable} from '@nestjs/common';
 import EventEmitter from 'events';
-import SteamAuth from 'node-steam-openid'
+import SteamAuth from 'node-steam-openid';
 import { SteamAuthService } from 'src/shared/providers/auth.service';
 
 @Injectable()
