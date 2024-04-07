@@ -1,9 +1,10 @@
-import { CallHandler, ExecutionContext, Injectable, NestInterceptor, NotFoundException } from "@nestjs/common";
+import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from "@nestjs/common";
 import { Observable, tap } from "rxjs";
 import { GameService } from "../../game/game.service";
 
 @Injectable()
 export class LogGameRequest implements NestInterceptor {
+  //ДЛЯ ЛОГА ДАННЫХ ИЗ БД
   constructor(private readonly gameService: GameService) {}
 
   async intercept(context: ExecutionContext, next: CallHandler): Promise<Observable<any>> {

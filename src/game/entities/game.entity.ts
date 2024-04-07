@@ -18,12 +18,4 @@ export class Game extends Model<Game>{
   @Column
   @ApiProperty() 
   priceEuro: number;
-
-  /*constructor(name: string, priceDollar: number, priceRub: number, priceEuro: number) {
-    super();
-    this.name = name;
-    this.priceDollar = priceDollar;
-    this.priceEuro = priceEuro;
-    this.priceRub = priceRub;
-  } */
 }

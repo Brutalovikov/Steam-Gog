@@ -1,11 +1,9 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { SteamApiService } from 'src/shared/providers/steam-api.service';
 import { FriendsSelection } from './models/friends-selection.model';
 import { Achievement } from 'src/shared/interfaces/achievement.interface';
 import { OwnedGames } from 'src/shared/interfaces/owned-games.interface';
-import { Game } from 'src/shared/interfaces/game.interface';
 import { MyLogger } from 'src/shared/providers/logger.service';
-//import { Achievement } from 'src/achievement/entities/achievement.entity';
 
 @Injectable()
 export class SteamService {
@@ -14,6 +12,8 @@ export class SteamService {
     private readonly steamApiService: SteamApiService,
   ) {}
 
+  //==============================ПО ЮЗЕРАМ==============================
+  //Достать старейшего и новейшего друга узера
   async getOldestAndNewestFriend(userId: string): Promise<FriendsSelection> {
     const friends = await this.steamApiService.getFriendList(userId);
     const sortedByDateFriends = friends.sort((a, b) => a.friend_since - b.friend_since);
@@ -25,10 +25,12 @@ export class SteamService {
     };
   }
 
+  //Достать данные профиля
   async getUser(userId: string) {
     return this.steamApiService.getUser(userId);
   }
 
+  //Достать всех друзей пользователя
   async getFriends(userId: string) {
     const friends = await this.steamApiService.getFriendList(userId);
     const friendsIds = friends.map(friend => friend.steamid);
@@ -37,15 +39,18 @@ export class SteamService {
     return users.map(player => player.personaname);
   }
 
+  //==============================ПО АЧИВКАМ И СТАТАМ==============================
+  //Достать все ачивменты по игрушке
   async getAllAchievementsForGame(gameId: number) {
     return this.steamApiService.getAllAchievementsForGame(gameId);
   }
 
+  //Достать все статы юзера по игрушке
   async getUserStatsForGame(userId: string, gameId: string) {
-    //console.log(await this.steamApiService.getUserStatsForGame(userId, gameId));
     return this.steamApiService.getUserStatsForGame(userId, gameId);
   }
 
+  //Достать все достигнутые узером ачивменты по игре
   async getUserAchievementsForGame(userId: string, gameId: string): Promise<Achievement[]> {
     this.logger.log(`Пользователь ${userId} запросил данные об игре ${gameId}`);
     const stats = await this.getUserStatsForGame(userId, gameId);
@@ -53,8 +58,6 @@ export class SteamService {
     if (!stats) return [];
 
     let achievementsArr: Achievement[] = [];
-    //if(stats.achievements[0].name != 'Ачивменты отсутствуют') {
-      //console.log("1111", gameId)
     const all = await this.getAllAchievementsForGame(parseInt(gameId));
 
     all.forEach(achievement => {
@@ -68,48 +71,29 @@ export class SteamService {
     });
 
     return achievementsArr;
-    //}
-    //else
-      //return stats.achievements;
   }
 
+  //Качаем всю инфу по игре, чтоб заполнить карточку игры
   async getGameInfoForGamePage(id: number) {
-    //console.log(await this.steamApiService.getGameInfoForGamePage(id));
     return this.steamApiService.getGameInfoForGamePage(id);
   }
 
+  //==============================ПО ИГРУШКАМ==============================
+  //Достать игру из стима
   async getGameFromSteam(id: number) {
     return this.steamApiService.getGame(id);
   }
 
+  //Достать игрухи пользователя
   async getOwnedGames(userId: string): Promise<OwnedGames> {
     const ownedGames = await this.steamApiService.getOwnedGames(userId);
-    //let counter: number = 0;
-    //console.log(ownedGames.games[0].appid);
-    //ownedGames.games[0].gameName = this.getGameName(251570)
 
-    /*for(let i = 0; i < ownedGames.games.length; i++) {
-      ownedGames.games[i].gameName = await this.getGameName(ownedGames.games[i].appid);
-      if(ownedGames.games[i].gameName == undefined) {
-        ownedGames.games[i].gameName = counter.toString();
-        counter++;
-      }       
-    }*/
-       
-    //console.log(1, ownedGames);
-   /* for(let i = 0; i < ownedGames.games.length; i++) {
-      //let appId = await this.steamApiService.getAppId(userId, i);
-      ownedGames.games[i].gameName = this.getGameName(appId);
-      //console.log(2, ownedGames.games[i].gameName);
-    }*/
-    //const gameNames = await this.steamApiService.getGame(ownedGames.games[0].gameName);
-    //console.log(ownedGames);
     return ownedGames;
   }
 
+  //Получить название игры
   async getGameName(gameId: number) {
     const game = await this.steamApiService.getGame(gameId);
-    //console.log(3, game.game.gameName);
 
     return game.game.gameName;
   }

@@ -18,13 +18,11 @@ export class AchievementController {
   }
 
   @Post()
-  //@UseInterceptors(AnsweringAcievement)
   async createAchievement(
     @Body() createAchievementDTO: CreateAchievementDTO
   ): Promise<string> {
     const createdAchievement: Achievement = await this.achievementsService.createAchievement(createAchievementDTO);
 
-    //return `Добавлено - ${createdAchievement.name}`;
     return AnsweringAcievement.toString();
   }
 
@@ -38,16 +36,10 @@ export class AchievementController {
     @Param('id') id : number,
     @Body() accessAchievementDTO: AccessAchievementDTO
   ): Promise<String> {
-    //const game = this.gameService.getGame(id);
-    //console.log(updateGameDTO);
     const accessAcievement = await this.achievementsService.toggleAchievementStatus(accessAchievementDTO, id);
     const achievementStatusTxt = accessAcievement.achieved ? "засчитано" : "теперь не достигнуто)";
-    /*if (!accessAcievement.achieved) {
-      return `Достижение ${accessAcievement.name} в игре ${accessAcievement.game} теперь НЕ ДОСТИГНУТО)`;
-    }
-    else
-      return `Достижение ${accessAcievement.name} в игре ${accessAcievement.game} засчитано.`;*/
-      return `Достижение ${accessAcievement.name} в игре ${accessAcievement.game} ${achievementStatusTxt}.`
+
+    return `Достижение ${accessAcievement.name} в игре ${accessAcievement.game} ${achievementStatusTxt}.`
   }
 }
 

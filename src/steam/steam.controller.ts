@@ -7,16 +7,15 @@ import { GameStats } from 'src/shared/interfaces/game-stats.interface';
 import { OwnedGames } from 'src/shared/interfaces/owned-games.interface';
 import { CheckGameFromSteam } from 'src/shared/interceptors/check-steam-game-exists.interceptor';
 import { CheckUser } from 'src/shared/interceptors/check-user-exists.interceptor';
-import { AuthService } from 'src/auth/auth.service';
 
 @ApiTags("steam")
 @Controller('steam')
 export class SteamController {
   constructor(
     private readonly steamService: SteamService,
-    //private readonly authService: AuthService,
   ) {}
 
+  //Качаем всю инфу по игре, чтоб заполнить карточку игры
   @Get('info/:gameId')
   @UseInterceptors(CheckGameFromSteam)
   async getGameInfoForGamePage(
@@ -25,6 +24,7 @@ export class SteamController {
     return this.steamService.getGameInfoForGamePage(id);
   }
 
+  //Достать данные профиля
   @Get('user/:userId')
   @UseInterceptors(CheckUser)
   async getUser(
@@ -33,6 +33,7 @@ export class SteamController {
     return this.steamService.getUser(id);
   }
 
+  //Достать игру из стима
   @Get('game/:gameId')
   @UseInterceptors(CheckGameFromSteam)
   async getGameFromSteam(
@@ -41,6 +42,7 @@ export class SteamController {
     return this.steamService.getGameFromSteam(id);
   }
 
+  //Достать все игры пользователя
   @Get('games/:userId')
   @UseInterceptors(CheckUser)
   async getOwnedGames(
@@ -49,6 +51,7 @@ export class SteamController {
     return this.steamService.getOwnedGames(userId);
   }
 
+  //Достать всех друзей пользователя
   @Get('friends/:userId')
   @UseInterceptors(CheckUser)
   async getFriends(
@@ -57,6 +60,7 @@ export class SteamController {
     return this.steamService.getFriends(userId);
   }
 
+  //Достать все ачивменты по игрушке
   @Get('achievements/:gameId')
   @UseInterceptors(CheckGameFromSteam)
   async getAllAchievementsForGame(
@@ -65,6 +69,7 @@ export class SteamController {
     return this.steamService.getAllAchievementsForGame(id);
   }
 
+  //Достать все статы юзера по игрушке
   @Get('game/:gameId/stats/:userId')
   @UseInterceptors(CheckGameFromSteam, CheckUser)
   async getUserStatsForGame(
@@ -78,25 +83,22 @@ export class SteamController {
     return stats;
   }
 
+  //Достать все достигнутые узером ачивменты по игре
   @Get('game/:gameId/achievements/:userId')
   @UseInterceptors(CheckGameFromSteam, CheckUser)
   async getUserAchievementsForGame(
     @Param('userId') userId : string,
     @Param('gameId') gameId : string
   ): Promise<Achievement[]> {
-    //console.log(await this.steamService.getUserAchievementsForGame(userId, gameId));
     return this.steamService.getUserAchievementsForGame(userId, gameId);
   }
 
+  //Достать старейшего и новейшего друга узера
   @Get('friendship/:userId')
   @UseInterceptors(CheckUser)
   async getOldestAndNewestFriends(
     @Param('userId') userId : string
   ): Promise<FriendsSelection> {
-    // const friends = await this.steamApiService.getFriendList(userId);
-    // const friendshipTime = friends.map(friend => friend.friend_since).join(',');
-
-    // return this.steamApiService.getUserNames(friendshipTime);
     return this.steamService.getOldestAndNewestFriend(userId);
   }
 }

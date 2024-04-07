@@ -1,3 +1,4 @@
+//Игры для таблицы
 export interface Game {
   appid: number,
   name: string,

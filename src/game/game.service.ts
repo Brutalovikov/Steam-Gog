@@ -8,15 +8,12 @@ import { InjectModel } from '@nestjs/sequelize';
 
 @Injectable()
 export class GameService {
-  //static readonly euroPrice = 0.92;
-  //static readonly rubPrice = 89.43;
   constructor(
     @InjectModel(Game) private readonly gameModel: typeof Game, 
     private readonly currencyService: CurrencyService
   ) {}
   
   async getGames(): Promise<Game[]> {
-    //console.log(await this.currencyService.getCourses());
     return this.gameModel.findAll();
   }
 
@@ -43,17 +40,6 @@ export class GameService {
 
   async updateGame(data: UpdateGameDTO, id: number): Promise<Game> {
     const game = await this.getGame(id);
-    /*
-    for (const [key, value] of Object.entries(data.name)) {
-      game[key] = value;
-    }
-
-    game.id = id;
-    //game.name = rename;
-    await this.gameRepository.save(game);*/
-    /*game.calculatePrice(data.priceDollar);
-    const shit = await this.getGamePrices(game.id);
-    console.log(shit);*/
     if (data.priceDollar) 
       await this.gameModel.update({...data, ...this.calculatePrice(data.priceDollar)}, {
         where: {
@@ -80,15 +66,6 @@ export class GameService {
     });
     return game;
   }
- /* async deleteGame(id: number): Promise<void> {
-    await this.gameRepository.delete(id);
-  }*/
- /* createGame(createGameDTO: CreateGameDTO): import("./entities/game.entity").Game {
-    throw new Error('Method not implemented.');
-  }
-  getGames(): Promise<import("./entities/game.entity").Game[]> {
-    throw new Error('Method not implemented.');
-  }*/
 
   async getGamePrices(id: number): Promise<Price> {
     const game = await this.getGame(id);
@@ -107,21 +84,4 @@ export class GameService {
 
     return {priceRub, priceEuro};
   }
-
-  /*conculatePrice(gamePrice: number): number[] {
-    //let prices: Array<number> = [gamePrice * GameService.euroPrice, gamePrice * GameService.rubPrice];
-    const gp = gamePrice * GameService.euroPrice;
-    const rp = gamePrice * GameService.rubPrice;
-
-    return [gp, rp];
-  }*/
-
-  /*conculatePrice(gamePrice: number): Price {
-    //let prices: Array<number> = [gamePrice * GameService.euroPrice, gamePrice * GameService.rubPrice];
-    const price: Price = new 
-    const gp = gamePrice * GameService.euroPrice;
-    const rp = gamePrice * GameService.rubPrice;
-
-    return [gp, rp];
-  }*/
 }
