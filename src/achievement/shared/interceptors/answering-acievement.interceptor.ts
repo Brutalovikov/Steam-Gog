@@ -15,12 +15,6 @@ export class AnsweringAcievement implements NestInterceptor {
     if (!achievement) {
       throw new NotFoundException(`Достижения с Id: ${searchedAchievementId} нет.`);
     }
-
-    /*return next
-      .handle()
-      .pipe(
-        tap(() => console.log()),
-      );*/
       return next.handle().pipe(
         map(data => {
 
