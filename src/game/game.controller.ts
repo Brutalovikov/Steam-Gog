@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Put, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, UseInterceptors } from '@nestjs/common';
 import { GameService } from './game.service';
 import { Game } from './entities/game.entity';
 import { CreateGameDTO } from './dto/create-game.dto';
@@ -14,7 +14,6 @@ import { GameResponseDTO } from './dto/game-response.dto';
 export class GameController {
   constructor(
     private readonly gameService: GameService,
-    //private readonly steamService: SteamService,
   ) {}
 
   @Get()
@@ -28,8 +27,7 @@ export class GameController {
   async getGamePrices(
     @Param('id') id : number
   ): Promise<Price> {
-   // const g = await this.gameService.getGamePrices(id);
-   // console.log(g[0], g[1]);
+
     return this.gameService.getGamePrices(id);
   }
 
@@ -38,11 +36,9 @@ export class GameController {
   async getGame(
     @Param('id') id : number
   ): Promise<GameResponseDTO> {
-   // const g = await this.gameService.getGamePrices(id);
-   // console.log(g[0], g[1]);
-   const game = await this.gameService.getGame(id);
-   const message = `Игра ${game.name} получена.`;
-   return {game, message};
+  const game = await this.gameService.getGame(id);
+  const message = `Игра ${game.name} получена.`;
+  return {game, message};
   }
 
   @Post()
@@ -51,7 +47,6 @@ export class GameController {
     @Body() createGameDTO: CreateGameDTO
   ): Promise<Game> {
     return this.gameService.createGame(createGameDTO);
-    //return `Игра ${createdGame.name} добавлена.`;
   }
 
   @Delete(':id')
@@ -60,7 +55,6 @@ export class GameController {
     @Param('id') id : number
   ): Promise<Game> {
     return this.gameService.deleteGame(id);
-    //return `Игра ${deletedGame.name} удалена.`;
   }
 
   @Patch(':id')
@@ -73,8 +67,6 @@ export class GameController {
     @Param('id') id : number,
     @Body() updateGameDTO: UpdateGameDTO
   ): Promise<Game> {
-    //const game = this.gameService.getGame(id);
-    //console.log(updateGameDTO);
     return this.gameService.updateGame(updateGameDTO, id);
   }
 }

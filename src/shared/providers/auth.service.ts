@@ -13,22 +13,11 @@ export class SteamAuthService extends PassportStrategy(Strategy) {
     });
   }
 
+  //Тут по апи ссыле получаются все данные для авторизации
   async getUserInfo(steamId: string) {
     const response = await axios.get(`https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=9EA0004FFC993ED4C65632B399B53BDB&steamids=${steamId}`);
     return response.data;
   }
 
-  async validate(identifier: string): Promise<any> {
-    // Здесь можно добавить логику для проверки пользователя в вашей системе
-    // Например, проверить есть ли пользователь с таким идентификатором в базе данных
-    // Если пользователь найден, вернуть его данные
-    // Если не найден, можно создать нового пользователя на основе данных из Steam и вернуть его данные
-    // В случае ошибки, можно выбросить UnauthorizedException
-    // Пример:
-    // const user = await this.userService.findOrCreateUser(identifier);
-    // if (!user) {
-    //   throw new UnauthorizedException();
-    // }
-    // return user;
-  }
+  async validate(identifier: string): Promise<any> {}
 }

@@ -15,6 +15,15 @@ export class AuthController {
     private readonly authService: AuthService,
   ) {}
   
+  //Перенаправляет пользователя на страницу авторизации Стим
+  @Get('steam')
+  async redirectToSteamLogin(): Promise<any> {
+    const redirectUrl = await this.authService.getRedirectUrl();
+
+    return {url: redirectUrl};
+  }
+
+  //Получение данных юзера со стима
   @Get('steam')
   async redirectToSteamLogin(): Promise<any> {
     const redirectUrl = await this.authService.getRedirectUrl();
@@ -38,6 +47,7 @@ export class AuthController {
     this.authBS.next(null);
   }
 
+  //SSE Отправляет данные авторизованного пользователя на фронт
   @Sse('sse')
   sse(): Observable<MessageEvent> {  
     if(this.userAuth) {
@@ -57,18 +67,5 @@ export class AuthController {
         map((_) => ({ data: { userId: this.userData, userName: this.userData, avatar: this.userData } }) as MessageEvent),
       )
     }
-    
-    // if(this.userAuth) {
-    //   console.log("Пошла жара");
-    //   return interval(1000).pipe(
-    //     // distinctUntilChanged(),
-    //     map((_) => ({ data: { user: this.userData.steamid, check: this.userAuth } }) as MessageEvent),
-    //   );
-    // }
-    // else {
-    //   return interval(100000).pipe(
-    //     map((_) => ({ data: { hello: 'world' } }) as MessageEvent),
-    //   );
-    // }  
   }
 }

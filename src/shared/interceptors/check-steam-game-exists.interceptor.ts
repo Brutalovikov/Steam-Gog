@@ -1,5 +1,5 @@
 import { Injectable, NestInterceptor, ExecutionContext, CallHandler, NotFoundException } from '@nestjs/common';
-import { Observable, catchError, throwError } from 'rxjs';
+import { Observable } from 'rxjs';
 import { MyLogger } from '../providers/logger.service';
 import { SteamApiService } from '../providers/steam-api.service';
 

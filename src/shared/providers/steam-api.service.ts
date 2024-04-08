@@ -9,6 +9,7 @@ import { OwnedGames } from '../interfaces/owned-games.interface';
 
 @Injectable()
 export class SteamApiService {
+  //Здесь все основные ссылки по работе с апи стим, выдергивание контента и тд
   constructor(private readonly httpService: HttpService) {}
   apiKey = '9EA0004FFC993ED4C65632B399B53BDB';
   steamApiURL = 'https://api.steampowered.com';
@@ -75,10 +76,6 @@ export class SteamApiService {
 
   //http://api.steampowered.com/ISteamUserStats/GetUserStatsForGame/v0002/?appid=440&key=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX&steamid=76561197972495328
   async getUserStatsForGame(userId: string, gameId: string): Promise<GameStats> {
-    // console.log(lastValueFrom(
-    //   this.httpService.get(`${this.steamURL}/ISteamUserStats/GetUserStatsForGame/v0002/?appid=${gameId}&key=${this.apiKey}&steamid=${userId}`).pipe(
-    //   map(res => res.data),
-    // )));
     const info = await this.getGame(parseInt(gameId));
     if(Object.keys(info.game).length != 0) {
       return lastValueFrom(
@@ -88,20 +85,5 @@ export class SteamApiService {
     }
     
     return null;
-    // else {
-    //   let achievement: Achievement[] = [];
-    //   achievement.push({icon: "net", name: "Ачивменты отсутствуют", achieved: 1});
-    //   return {
-    //     steamID: "Неизвестно",
-    //     gameName: "Неизвестно",
-    //     achievements: achievement
-    //   };
-    // }
-    // const stats = await lastValueFrom(
-    //   this.httpService.get(`${this.steamURL}/ISteamUserStats/GetUserStatsForGame/v0002/?appid=${gameId}&key=${this.apiKey}&steamid=${userId}`).pipe(
-    //   map(res => res.data.playerstats),
-    // ))
-
-    // return stats;
   } 
 }

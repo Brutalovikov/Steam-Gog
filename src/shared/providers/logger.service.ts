@@ -1,10 +1,9 @@
-import { Injectable, Logger, LoggerService } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 
 @Injectable()
 export class MyLogger extends Logger {
 
   log(message: any, ...optionalParams: any[]) {
-    // console.log(`Our log: ${message}`);
     super.log(`Our log: ${message}`);
   }
 
