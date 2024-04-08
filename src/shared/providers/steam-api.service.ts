@@ -5,16 +5,24 @@ import { SteamUser } from '../interfaces/steam-user.interface';
 import { SteamFriend } from '../interfaces/steam-friend.interface';
 import { GameStats } from '../interfaces/game-stats.interface';
 import { OwnedGames } from '../interfaces/owned-games.interface';
+import { ConfigService } from '@nestjs/config';
 
 
 @Injectable()
 export class SteamApiService {
   //Здесь все основные ссылки по работе с апи стим, выдергивание контента и тд
-  constructor(private readonly httpService: HttpService) {}
-  apiKey = '9EA0004FFC993ED4C65632B399B53BDB';
-  steamApiURL = 'https://api.steampowered.com';
-  steamStoreURL = 'https://store.steampowered.com/api/appdetails';
-  //Мой стим айде - 76561198280250790
+  apiKey: string;
+  steamApiURL: string;
+  steamStoreURL: string;
+
+  constructor(
+    private readonly httpService: HttpService,
+    private configService: ConfigService
+  ) {
+    this.apiKey = this.configService.get('STEAM_API_KEY');
+    this.steamStoreURL = `${this.configService.get('STEAM_STORE_URL')}/appdetails`;
+    this.steamApiURL = this.configService.get('STEAM_API_URL');
+  }
 
 
   //https://store.steampowered.com/api/appdetails?appids=550

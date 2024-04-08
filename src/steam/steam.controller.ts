@@ -2,11 +2,11 @@ import { Controller, Param, Get, NotFoundException, UseInterceptors } from '@nes
 import { ApiTags } from '@nestjs/swagger';
 import { SteamService } from './steam.service';
 import { FriendsSelection } from './models/friends-selection.model';
-import { Achievement } from 'src/shared/interfaces/achievement.interface';
-import { GameStats } from 'src/shared/interfaces/game-stats.interface';
-import { OwnedGames } from 'src/shared/interfaces/owned-games.interface';
-import { CheckGameFromSteam } from 'src/shared/interceptors/check-steam-game-exists.interceptor';
-import { CheckUser } from 'src/shared/interceptors/check-user-exists.interceptor';
+import { Achievement } from '../shared/interfaces/achievement.interface';
+import { GameStats } from '../shared/interfaces/game-stats.interface';
+import { OwnedGames } from '../shared/interfaces/owned-games.interface';
+import { CheckGameFromSteam } from '../shared/interceptors/check-steam-game-exists.interceptor';
+import { CheckUser } from '../shared/interceptors/check-user-exists.interceptor';
 
 @ApiTags("steam")
 @Controller('steam')

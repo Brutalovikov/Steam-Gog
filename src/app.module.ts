@@ -10,6 +10,7 @@ import { SteamModule } from './steam/steam.module';
 import { PassportModule } from '@nestjs/passport';
 import { AuthModule } from './auth/auth.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
@@ -26,6 +27,9 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
       logging: false,
     }),
     EventEmitterModule.forRoot(),
+    ConfigModule.forRoot({
+      envFilePath: '.development.env',
+    }),
     AchievementModule,
     GameModule,
     SteamModule,

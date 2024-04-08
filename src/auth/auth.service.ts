@@ -1,19 +1,18 @@
 import {Injectable} from '@nestjs/common';
-import EventEmitter from 'events';
+import { ConfigService } from '@nestjs/config';
 import SteamAuth from 'node-steam-openid'
-import { SteamAuthService } from 'src/shared/providers/auth.service';
 
 @Injectable()
 export class AuthService {
 	private readonly steam: SteamAuth;
-	private readonly steamAPI: SteamAuthService;
-	private eventEmitter: EventEmitter = new EventEmitter();
 
-	constructor() {
+	constructor(
+		private configService: ConfigService,
+	) {
 		this.steam = new SteamAuth({
-			realm: 'http://localhost:3000',
-			returnUrl: 'http://localhost:3000/auth/steam/callback',
-			apiKey: '9EA0004FFC993ED4C65632B399B53BDB',
+			realm: `${this.configService.get('BACK_URL')}`,
+			returnUrl: `${this.configService.get('BACK_URL')}/auth/steam/callback`,
+			apiKey: this.configService.get('STEAM_API_KEY'),
 		});
 	}
 
