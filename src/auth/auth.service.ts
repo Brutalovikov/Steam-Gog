@@ -1,8 +1,7 @@
 import {Injectable} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import EventEmitter from 'events';
-import SteamAuth from 'node-steam-openid'
-import { Observable, fromEvent, map, tap } from 'rxjs';
+import SteamAuth from 'node-steam-openid';
 import { SteamAuthService } from 'src/shared/providers/auth.service';
 
 @Injectable()
@@ -16,7 +15,7 @@ export class AuthService {
 			realm: `${this.configService.get('BACK_URL')}`,
 			returnUrl: `${this.configService.get('BACK_URL')}/auth/steam/callback`,
 			apiKey: this.configService.get('STEAM_API_KEY'),
-
+    }
 
 	async getRedirectUrl(): Promise<string> {
 		return await this.steam.getRedirectUrl(); // Renvoie l'URL d'authentification Steam

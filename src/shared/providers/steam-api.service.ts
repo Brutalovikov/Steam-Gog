@@ -7,7 +7,6 @@ import { GameStats } from '../interfaces/game-stats.interface';
 import { OwnedGames } from '../interfaces/owned-games.interface';
 import { ConfigService } from '@nestjs/config';
 
-
 @Injectable()
 export class SteamApiService {
   //Здесь все основные ссылки по работе с апи стим, выдергивание контента и тд
@@ -23,8 +22,6 @@ export class SteamApiService {
     this.steamStoreURL = `${this.configService.get('STEAM_STORE_URL')}/appdetails`;
     this.steamApiURL = this.configService.get('STEAM_API_URL');
   }
-
-
 
   //https://store.steampowered.com/api/appdetails?appids=550
   getGameInfoForGamePage(gameId: number): Promise<any> {
