@@ -25,6 +25,7 @@ export class SteamApiService {
   }
 
 
+
   //https://store.steampowered.com/api/appdetails?appids=550
   getGameInfoForGamePage(gameId: number): Promise<any> {
     return lastValueFrom(

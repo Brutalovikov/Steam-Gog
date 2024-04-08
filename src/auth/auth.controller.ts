@@ -28,6 +28,11 @@ export class AuthController {
   }
 
   //Получение данных юзера со стима
+  @Get('steam')
+  async redirectToSteamLogin(): Promise<any> {
+    const redirectUrl = await this.authService.getRedirectUrl();
+    return {url: redirectUrl};
+  }
   @Get('steam/callback')
   async handleSteamLoginCallback(@Req() req: any, @Res() res: any): Promise<any> {
     this.userData = await this.authService.authenticate(req);
@@ -61,6 +66,6 @@ export class AuthController {
         tap(() => this.logger.log("Log OUT")),
         map((_) => ({ data: { userId: this.userData, userName: this.userData, avatar: this.userData } }) as MessageEvent),
       )
-    } 
+    }
   }
 }

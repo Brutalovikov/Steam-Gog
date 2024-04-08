@@ -26,7 +26,5 @@ export class SteamAuthService extends PassportStrategy(Strategy) {
     return response.data;
   }
 
-  async validate(identifier: string): Promise<any> {
-
-  }
+  async validate(identifier: string): Promise<any> {}
 }
