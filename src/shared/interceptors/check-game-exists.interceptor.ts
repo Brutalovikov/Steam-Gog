@@ -14,7 +14,6 @@ export class CheckGameExists implements NestInterceptor {
     const searchedGameId = request.params.id;
 
     const game = await this.gameService.getGame(searchedGameId);
-    console.log(game);
     if (!game) {
       this.logger.error(`Игры с Id: ${searchedGameId} нет.`);
       throw new NotFoundException(`Игры с Id: ${searchedGameId} нет.`);   

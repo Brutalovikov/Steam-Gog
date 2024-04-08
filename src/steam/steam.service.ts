@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { SteamApiService } from 'src/shared/providers/steam-api.service';
+import { SteamApiService } from '../shared/providers/steam-api.service';
 import { FriendsSelection } from './models/friends-selection.model';
-import { Achievement } from 'src/shared/interfaces/achievement.interface';
-import { OwnedGames } from 'src/shared/interfaces/owned-games.interface';
-import { MyLogger } from 'src/shared/providers/logger.service';
+import { Achievement } from '../shared/interfaces/achievement.interface';
+import { OwnedGames } from '../shared/interfaces/owned-games.interface';
+import { MyLogger } from '../shared/providers/logger.service';
 
 @Injectable()
 export class SteamService {

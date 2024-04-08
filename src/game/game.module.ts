@@ -5,10 +5,11 @@ import { GameService } from "./game.service";
 import { HttpModule } from "@nestjs/axios";
 import { CurrencyService } from "../shared/providers/currency.service";
 import { SequelizeModule } from "@nestjs/sequelize";
-import { SteamApiService } from "src/shared/providers/steam-api.service";
+import { SteamApiService } from "../shared/providers/steam-api.service";
+import { ConfigModule } from "@nestjs/config";
 
 @Module({
-  imports: [SequelizeModule.forFeature([Game]), HttpModule],
+  imports: [SequelizeModule.forFeature([Game]), HttpModule, ConfigModule],
   controllers: [GameController],
   providers: [GameService, CurrencyService, SteamApiService],
   exports: [SequelizeModule],
